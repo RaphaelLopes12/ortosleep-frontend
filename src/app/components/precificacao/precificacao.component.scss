@@ -1,0 +1,428 @@
+.precificacao-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    
+    h1 {
+      color: #2c3e50;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+
+      mat-icon {
+        font-size: 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #3498db;
+      }
+    }
+
+    p {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+
+  .precificacao-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .form-card, .result-card {
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: none;
+    overflow: hidden;
+
+    mat-card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      margin: -16px -16px 20px -16px;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+        margin: 0;
+
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+
+      mat-card-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 5px;
+      }
+    }
+
+    mat-card-content {
+      padding: 20px;
+    }
+  }
+
+  .result-card {
+    mat-card-header {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .produto-option {
+    padding: 10px 0;
+    border-bottom: 1px solid #ecf0f1;
+
+    .produto-nome {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .produto-categoria {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+    }
+
+    .produto-precos {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+
+      .preco-vista, .preco-prazo {
+        padding: 2px 8px;
+        border-radius: 12px;
+        background: #ecf0f1;
+        color: #34495e;
+      }
+
+      .preco-vista {
+        background: #e8f5e8;
+        color: #27ae60;
+      }
+
+      .preco-prazo {
+        background: #fef9e7;
+        color: #f39c12;
+      }
+    }
+  }
+
+  .produto-info {
+    margin-top: 20px;
+
+    .produto-card {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+      border-radius: 12px;
+
+      h3 {
+        color: #2d3436;
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+      }
+
+      p {
+        margin: 0 0 15px 0;
+        color: #636e72;
+      }
+
+      .custos-produto {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+
+        .custo-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background: rgba(255, 255, 255, 0.6);
+          border-radius: 8px;
+
+          .label {
+            font-weight: 500;
+            color: #2d3436;
+          }
+
+          .valor {
+            font-weight: 600;
+            color: #e17055;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      min-width: 180px;
+      height: 45px;
+      border-radius: 25px;
+      font-weight: 600;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+  }
+
+  .resultado-secao {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #3498db;
+
+    &.lucratividade {
+      border-left-color: #27ae60;
+      background: linear-gradient(135deg, #f8fff8 0%, #f0fff0 100%);
+    }
+
+    h4 {
+      margin: 0 0 15px 0;
+      color: #2c3e50;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .resultado-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #ecf0f1;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.destaque {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+        margin: 10px -20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 500;
+        color: #636e72;
+
+        .destaque & {
+          color: white;
+        }
+      }
+
+      .valor {
+        font-weight: 600;
+        font-size: 1.1rem;
+
+        &.custo {
+          color: #e74c3c;
+        }
+
+        &.preco-sem-desconto {
+          color: #f39c12;
+        }
+
+        &.preco-final {
+          color: #27ae60;
+          font-size: 1.3rem;
+        }
+
+        &.desconto {
+          color: #e67e22;
+        }
+
+        &.lucro-valor {
+          color: #27ae60;
+        }
+
+        &.margem-lucro {
+          font-size: 1.2rem;
+          
+          &.margem-boa {
+            color: #27ae60;
+          }
+
+          &.margem-media {
+            color: #f39c12;
+          }
+
+          &.margem-baixa {
+            color: #e74c3c;
+          }
+        }
+      }
+    }
+  }
+
+  .indicadores {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+    .indicador-container {
+      h5 {
+        margin: 0 0 15px 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+      }
+
+      .indicador-barra {
+        background: #ecf0f1;
+        height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 15px;
+
+        .barra-progresso {
+          height: 100%;
+          border-radius: 10px;
+          transition: all 0.3s ease;
+
+          &.barra-boa {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+          }
+
+          &.barra-media {
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+          }
+
+          &.barra-baixa {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+          }
+        }
+      }
+
+      .indicador-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    mat-spinner {
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #7f8c8d;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .precificacao-container {
+    padding: 15px;
+
+    .header h1 {
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .resultados-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// Animações
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-card, .result-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.resultado-secao {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}

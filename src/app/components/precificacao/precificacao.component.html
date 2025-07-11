@@ -1,0 +1,247 @@
+<div class="precificacao-container">
+  <div class="header">
+    <h1>
+      <mat-icon>calculate</mat-icon>
+      Calculadora de Precificação Ortosleep
+    </h1>
+    <p>Calcule o preço de venda, margem de lucro e descontos dos seus produtos</p>
+  </div>
+
+  <form [formGroup]="precificacaoForm" class="precificacao-form">
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>search</mat-icon>
+          Seleção do Produto
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Campo de busca com autocomplete -->
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Buscar Produto</mat-label>
+          <input 
+            matInput 
+            formControlName="buscarProduto"
+            [matAutocomplete]="auto"
+            placeholder="Digite o nome do produto ou categoria...">
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-autocomplete 
+            #auto="matAutocomplete" 
+            [displayWith]="mostrarProduto"
+            (optionSelected)="selecionarProduto($event.option.value)">
+            <mat-option 
+              *ngFor="let produto of produtosFiltrados | async" 
+              [value]="produto">
+              <div class="produto-option">
+                <div class="produto-nome">{{ produto.nome }}</div>
+                <div class="produto-categoria">{{ produto.categoria }}</div>
+                <div class="produto-precos">
+                  <span class="preco-vista">À Vista: {{ formatarMoeda(produto.custoAVista) }}</span>
+                  <span class="preco-prazo">À Prazo: {{ formatarMoeda(produto.custoAPrazo) }}</span>
+                </div>
+              </div>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Informações do produto selecionado -->
+        <div *ngIf="produtoSelecionado" class="produto-info">
+          <mat-card class="produto-card">
+            <mat-card-content>
+              <h3>{{ produtoSelecionado.nome }}</h3>
+              <p><strong>Categoria:</strong> {{ produtoSelecionado.categoria }}</p>
+              <div class="custos-produto">
+                <div class="custo-item">
+                  <span class="label">Custo À Vista:</span>
+                  <span class="valor">{{ formatarMoeda(produtoSelecionado.custoAVista) }}</span>
+                </div>
+                <div class="custo-item">
+                  <span class="label">Custo À Prazo:</span>
+                  <span class="valor">{{ formatarMoeda(produtoSelecionado.custoAPrazo) }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Configurações de Precificação -->
+    <mat-card class="form-card" *ngIf="produtoSelecionado">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>tune</mat-icon>
+          Configurações de Precificação
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="form-row">
+          <!-- Tipo de preço -->
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Preço Base</mat-label>
+            <mat-select formControlName="usarPrecoAVista">
+              <mat-option [value]="true">À Vista</mat-option>
+              <mat-option [value]="false">À Prazo</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Percentual de aumento -->
+          <mat-form-field appearance="outline">
+            <mat-label>Percentual de Aumento (%)</mat-label>
+            <input 
+              matInput 
+              type="number" 
+              formControlName="percentualAumento"
+              min="0" 
+              max="1000"
+              step="0.1">
+            <mat-icon matSuffix>trending_up</mat-icon>
+            <mat-hint>Margem de lucro desejada</mat-hint>
+          </mat-form-field>
+
+          <!-- Percentual de desconto -->
+          <mat-form-field appearance="outline">
+            <mat-label>Percentual de Desconto (%)</mat-label>
+            <input 
+              matInput 
+              type="number" 
+              formControlName="percentualDesconto"
+              min="0" 
+              max="100"
+              step="0.1">
+            <mat-icon matSuffix>local_offer</mat-icon>
+            <mat-hint>Desconto para o cliente</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="button"
+            (click)="calcularPrecificacao()"
+            [disabled]="precificacaoForm.invalid || carregando">
+            <mat-icon>calculate</mat-icon>
+            Calcular Precificação
+          </button>
+
+          <button 
+            mat-stroked-button 
+            color="warn" 
+            type="button"
+            (click)="limparFormulario()">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Resultados -->
+    <mat-card class="result-card" *ngIf="resultadoCalculo">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>assessment</mat-icon>
+          Resultados da Precificação
+        </mat-card-title>
+        <mat-card-subtitle>
+          Produto: {{ resultadoCalculo.produto.nome }} ({{ resultadoCalculo.tipoPreco }})
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="resultados-grid">
+          <!-- Custos -->
+          <div class="resultado-secao">
+            <h4>💰 Custos</h4>
+            <div class="resultado-item">
+              <span class="label">Custo Base:</span>
+              <span class="valor custo">{{ formatarMoeda(resultadoCalculo.custoBase) }}</span>
+            </div>
+          </div>
+
+          <!-- Preços de Venda -->
+          <div class="resultado-secao">
+            <h4>💵 Preços de Venda</h4>
+            <div class="resultado-item">
+              <span class="label">Preço sem Desconto:</span>
+              <span class="valor preco-sem-desconto">{{ formatarMoeda(resultadoCalculo.precoVendaSemDesconto) }}</span>
+            </div>
+            <div class="resultado-item destaque">
+              <span class="label">Preço Final com Desconto:</span>
+              <span class="valor preco-final">{{ formatarMoeda(resultadoCalculo.precoVendaComDesconto) }}</span>
+            </div>
+          </div>
+
+          <!-- Descontos -->
+          <div class="resultado-secao">
+            <h4>🏷️ Descontos</h4>
+            <div class="resultado-item">
+              <span class="label">Valor do Desconto:</span>
+              <span class="valor desconto">{{ formatarMoeda(resultadoCalculo.valorDesconto) }}</span>
+            </div>
+            <div class="resultado-item">
+              <span class="label">Percentual de Desconto:</span>
+              <span class="valor">{{ formatarPercentual(resultadoCalculo.percentualDesconto) }}</span>
+            </div>
+          </div>
+
+          <!-- Lucratividade -->
+          <div class="resultado-secao lucratividade">
+            <h4>📈 Lucratividade</h4>
+            <div class="resultado-item">
+              <span class="label">Lucro em R$:</span>
+              <span class="valor lucro-valor">{{ formatarMoeda(resultadoCalculo.lucroEmReais) }}</span>
+            </div>
+            <div class="resultado-item destaque">
+              <span class="label">Margem de Lucro:</span>
+              <span class="valor margem-lucro" 
+                    [ngClass]="{
+                      'margem-boa': resultadoCalculo.margemLucro >= 30,
+                      'margem-media': resultadoCalculo.margemLucro >= 15 && resultadoCalculo.margemLucro < 30,
+                      'margem-baixa': resultadoCalculo.margemLucro < 15
+                    }">
+                {{ formatarPercentual(resultadoCalculo.margemLucro) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicadores visuais -->
+        <div class="indicadores">
+          <div class="indicador-container">
+            <h5>Análise da Margem</h5>
+            <div class="indicador-barra">
+              <div class="barra-progresso" 
+                   [style.width.%]="Math.min(resultadoCalculo.margemLucro, 100)"
+                   [ngClass]="{
+                     'barra-boa': resultadoCalculo.margemLucro >= 30,
+                     'barra-media': resultadoCalculo.margemLucro >= 15 && resultadoCalculo.margemLucro < 30,
+                     'barra-baixa': resultadoCalculo.margemLucro < 15
+                   }">
+              </div>
+            </div>
+            <div class="indicador-status">
+              <mat-icon *ngIf="resultadoCalculo.margemLucro >= 30" color="primary">thumb_up</mat-icon>
+              <mat-icon *ngIf="resultadoCalculo.margemLucro >= 15 && resultadoCalculo.margemLucro < 30" color="accent">thumbs_up_down</mat-icon>
+              <mat-icon *ngIf="resultadoCalculo.margemLucro < 15" color="warn">thumb_down</mat-icon>
+              <span>
+                <ng-container *ngIf="resultadoCalculo.margemLucro >= 30">Margem Excelente</ng-container>
+                <ng-container *ngIf="resultadoCalculo.margemLucro >= 15 && resultadoCalculo.margemLucro < 30">Margem Adequada</ng-container>
+                <ng-container *ngIf="resultadoCalculo.margemLucro < 15">Margem Baixa</ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+
+  <!-- Loading -->
+  <div *ngIf="carregando" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Calculando precificação...</p>
+  </div>
+</div>
